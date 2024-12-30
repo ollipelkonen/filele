@@ -1,4 +1,6 @@
-// CREATE TABLE file (id_file int NOT NULL AUTO_INCREMENT, name text, mime text, pos varchar(32), PRIMARY KEY (id_file));
+// CREATE TABLE files (id_file int NOT NULL AUTO_INCREMENT, name text, mime text, pos varchar(32), PRIMARY KEY (id_file));
+//CREATE TABLE file_contents (id_file_content INT NOT NULL AUTO_INCREMENT, id_file INT NOT NULL, content BLOB, PRIMARY KEY (id_file_content), FOREIGN KEY (id_file) REFERENCES files(id_file) ON DELETE CASCADE);
+
 
 import type { PageServerLoad, Actions } from './$types';
 import * as fs from 'fs';
@@ -89,7 +91,7 @@ async function dbEdit(id,pos) {
 
 
 export const actions = {
-	json: async ({ request, cookies }) => {
+	insert: async ({ request, cookies }) => {
 		console.log("___DROP",request);
     const formData = await request.formData();
 
@@ -113,7 +115,6 @@ export const actions = {
 			dbStore(k.name,k.type, pos );
 			//writeFile(k.name, Buffer.from(await k.arrayBuffer()));
 		});
-
     return { success: true };
 	},
 

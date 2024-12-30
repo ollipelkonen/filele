@@ -64,15 +64,27 @@
 
 <svelte:head>
 	<title>Sverdle</title>
-	<meta name="description" content="A Wordle clone written in SvelteKit" />
+	<meta name="description" content="written in SvelteKit" />
 </svelte:head>
 
 <h1 class="visually-hidden">Sverdle</h1>
 
+<button onclick={(e) => {
+	fetch( '/content?id=26' )
+		.then( (response) => {
+			console.log(response);
+			return response.text();
+		})
+		.then( (data) => {
+			console.log(data);
+		});
+}}>
+GET</button>
+
 <form
 	bind:this={form}
 	method="post"
-	action="?/json"
+	action="?/insert"
 	enctype="multipart/form-data"
 	onchange={(e) => {
 		console.log("onchange",form,e)
@@ -154,11 +166,13 @@
 		<Dropzone on:drop={handleFilesSelect} style="position:relative; display:none;"/>
 		<p style="padding-left:10em">{Math.round(m.x)} x {Math.round(m.y)}</p>
 		{#each data.files as file}
-			<div class="imga" style="{iconSize}
+			<div draggable="true" class="imga" style="{iconSize}
+				ondragstart={startDragFile}
+				id={file.id_file}
 				position:absolute;
 				left:{file.pos.x}px;top:{file.pos.y}px;
 				">
-				<img ondragstart={startDragFile} id={file.id_file} style="{iconSize};position:absolute;left:0;top:0;" src="{mimePath}/{file.mime.replaceAll('/','-')}.svg"/>
+				<img draggable="false" style="{iconSize};position:absolute;left:0;top:0;" src="{mimePath}/{file.mime.replaceAll('/','-')}.svg"/>
 				{file.name}
 			</div>
 		{/each}
