@@ -1,8 +1,5 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
-	import { confetti } from '@neoconfetti/svelte';
 	import type { ActionData, PageData } from './$types';
-	import { reducedMotion } from './reduced-motion';
 	import Dropzone from "svelte-file-dropzone";
 	import { fromEvent } from "file-selector";
 

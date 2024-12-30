@@ -1,6 +1,5 @@
 // CREATE TABLE file (id_file int NOT NULL AUTO_INCREMENT, name text, mime text, pos varchar(32), PRIMARY KEY (id_file));
 
-import { Game } from './game';
 import type { PageServerLoad, Actions } from './$types';
 import * as fs from 'fs';
 import { writeFile } from 'node:fs/promises';
@@ -47,13 +46,11 @@ async function getFiles() {
 
 export const load = (async({ cookies }) => {
 
-	const game = new Game(cookies.get('sverdle'));
-
 	return getFiles();
 	return {
 		guesses: undefined,
 		answers: undefined,
-		answer: game.answers.length >= 6 ? game.answer : null
+		answer: undefined,
 	};
 }) satisfies PageServerLoad;
 
@@ -95,7 +92,6 @@ export const actions = {
 	json: async ({ request, cookies }) => {
 		console.log("___DROP",request);
     const formData = await request.formData();
-		
 
 		formData.entries().forEach( e => console.log("__entry",e) );
 		formData.keys().forEach( e => console.log("__key",e) );
@@ -115,9 +111,7 @@ export const actions = {
 			console.log("___k ", typeof k, k)
 			
 			dbStore(k.name,k.type, pos );
-
-			writeFile(k.name, Buffer.from(await k.arrayBuffer()));
-
+			//writeFile(k.name, Buffer.from(await k.arrayBuffer()));
 		});
 
     return { success: true };
